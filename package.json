@@ -1,5 +1,5 @@
 {
-  "name": "push-notify",
+  "name": "node-restover",
   "version": "0.1.0",
   "description": "Push notification service",
   "main": "dist/index.js",
