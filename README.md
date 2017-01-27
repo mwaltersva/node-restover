@@ -3,6 +3,7 @@ node-restover
 
 A small express based rest api for Pushover
 -
+[![Build Status](https://travis-ci.org/mwaltersva/node-restover.svg?branch=master)](https://travis-ci.org/mwaltersva/node-restover)
 
 Used to send push notifications to mobile devices with the pushover app installed
 
