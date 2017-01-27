@@ -13,6 +13,7 @@ Install
 1. Clone the repository
 1. `yarn` or `npm install`
 1. `yarn run build` or `npm build`
+1. Rename config.sample.json to config.json
 1. Edit config.json
 
 Run
