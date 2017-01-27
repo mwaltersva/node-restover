@@ -1,4 +1,0 @@
---recursive
---require ts-node/register
---reporter spec
-./test/*.ts
