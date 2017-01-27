@@ -5,40 +5,57 @@ import {PushoverRequest} from './pushover-request.interface';
 
 const config = require('../../config.json');
 
+interface LoopState {
+    shouldRun: boolean;
+    lastRun: number;
+    consecutiveErrors: number;
+    messageQueue: Array<PushoverRequest>;
+}
+
 export function messageLoop(messageQueue: Array<PushoverRequest>) {
-    let shouldRun: boolean = true;
-    let lastRun: number = new Date().getTime();
-    let consecutiveErrors: number = 0;
+    let state = {
+        shouldRun: true,
+        lastRun: new Date().getTime(),
+        consecutiveErrors: 0,
+        messageQueue
+    };
 
-    setInterval(async() => {
-        /*
-         Send messages if the time since the last send has been at least <config.sendInterval>
-         Pushover asks that we don't abuse their API
-         */
-        let now: number = new Date().getTime();
-        if (!shouldRun || now - lastRun < config.sendInterval || messageQueue.length === 0) return false;
-
-        shouldRun = false;
-        lastRun = now;
-
-        try {
-            let response = await processMessageQueue(messageQueue);
-            console.log(response);
-            shouldRun = true;
-            consecutiveErrors = 0;
-        } catch (err) {
-            console.error(err);
-            consecutiveErrors++;
-
-            exitOnConsecutiveErrors(consecutiveErrors);
-
-            if (err.statusCode >= 500) {
-                messageQueue.unshift(err.options.body);
-            }
-
-            shouldRun = true;
-        }
+    /*
+     Start a loop that will process the message queue
+     */
+    setInterval(() => {
+        return loopTick(state);
     }, config.loopInterval);
+}
+
+export async function loopTick(state: LoopState) {
+    /*
+     Send messages if the time since the last send has been at least <config.sendInterval>
+     Pushover asks that we don't abuse their API
+     */
+    let now: number = new Date().getTime();
+    if (!state.shouldRun || now - state.lastRun < config.sendInterval || state.messageQueue.length === 0) return false;
+
+    state.shouldRun = false;
+    state.lastRun = now;
+
+    try {
+        let response = await processMessageQueue(state.messageQueue);
+        console.log(response);
+        state.shouldRun = true;
+        state.consecutiveErrors = 0;
+    } catch (err) {
+        console.error(err);
+        state.consecutiveErrors++;
+
+        exitOnConsecutiveErrors(state.consecutiveErrors);
+
+        if (err.statusCode >= 500) {
+            state.messageQueue.unshift(err.options.body);
+        }
+
+        state.shouldRun = true;
+    }
 }
 
 export function processMessageQueue(messageQueue: Array<PushoverRequest>): Promise<Array<any>> {
