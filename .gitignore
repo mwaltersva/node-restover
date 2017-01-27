@@ -7,4 +7,4 @@ typings
 *.log
 secret.js
 .vscode
-.config.json
+config.json
