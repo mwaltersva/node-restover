@@ -5,9 +5,9 @@ import * as bodyParser from 'body-parser';
 import {sendPostController} from './lib/send-post-controller';
 import {messageLoop} from './lib/message-queue';
 
-let config = require('../config.json');
+const config = require('../config.json');
 
-let app: Application = express();
+const app: Application = express();
 
 app.use(helmet());
 app.use(bodyParser.json());
