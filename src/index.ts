@@ -92,11 +92,11 @@ function messageLoop(messageQueue: Array<PushoverRequest>) {
 
                 shouldRun = true;
             })
-    }, 1000);
+    }, config.loopInterval);
 }
 
 function processMessageQueue(messageQueue: Array<PushoverRequest>): Promise<Array<any>> {
-    let messages: Array<PushoverRequest> = messageQueue.splice(0, 2);
+    let messages: Array<PushoverRequest> = messageQueue.splice(0, config.maxMessagesToSend);
 
     let promises: Array<RequestPromise> = messages
         .map(message => {

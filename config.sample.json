@@ -2,5 +2,7 @@
   "token": "app token goes here",
   "user": "user key goes here",
   "port": 3001,
-  "maxConsecutiveErrors": 500
+  "maxConsecutiveErrors": 500,
+  "loopInterval": 1000,
+  "maxMessagesToSend": 2
 }
