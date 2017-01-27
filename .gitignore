@@ -1,0 +1,9 @@
+.idea
+out-files/*
+in-files/*
+node_modules
+dist
+typings
+*.log
+secret.js
+.vscode
